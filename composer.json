@@ -1,6 +1,6 @@
 {
     "name": "mathe/omnipay-juno",
-    "description": "Stripe driver for the Omnipay payment processing library",
+    "description": "Juno driver for the Omnipay payment processing library",
 	"keywords": [
         "gateway",
         "omnipay",

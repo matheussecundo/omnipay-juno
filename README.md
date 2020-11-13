@@ -1,2 +1,2 @@
 # omnipay-juno
-omnipay juno gateway
+Juno driver for the Omnipay
