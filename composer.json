@@ -19,6 +19,9 @@
         "omnipay/common": "^3"
     },
 	"autoload": {
-        "psr-4": { "Omnipay\\Juno\\" : "src/" }
+        "psr-4": { "Omnipay\\Juno\\" : "src/" },
+        "classmap": [
+            "src/"
+        ]
     }
 }
