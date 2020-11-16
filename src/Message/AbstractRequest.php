@@ -76,6 +76,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('resourceToken', $value);
     }
 
+    public function getBearerAuthorization()
+    {
+        return $this->getParameter('bearer');
+    }
+
+    public function setBearerAuthorization($value)
+    {
+        return $this->setParameter('bearer', $value);
+    }
+
     public function getRootUrl()
     {
         if ($this->getTestMode() == FALSE)
@@ -83,6 +93,21 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             return $this->getLiveRootUrl();
         }
         return $this->getTestRootUrl();
+    }
+
+    public function getAuthorization()
+    {
+        $bearer = $this->getBearerAuthorization();
+        if ($bearer !== NULL)
+        {
+            return $bearer;
+        }
+        return $this->getBasicAuthorization();
+    }
+
+    private function getBasicAuthorization()
+    {
+        return 'Basic ' . base64_encode($this->getClientId() . ':' . $this->getClientSecret());
     }
 
     abstract public function getHttpMethod();
@@ -114,7 +139,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $headers = array_merge(
             $this->getHeaders(),
-            array('Authorization' => 'Basic ' . base64_encode($this->getClientId() . ':' . $this->getClientSecret())),
+            array('Authorization' => $this->getAuthorization()),
             array('Content-Type' => $this->getContentType()),
         );
 
