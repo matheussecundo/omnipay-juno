@@ -90,34 +90,33 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $cache = new FilesystemAdapter();
 
-        $value = $cache->get('junoBearerToken', $this->getBearerToken);
+        $value = $cache->get('junoBearerToken', function (ItemInterface $item) {
+            $headers = [
+                'Authorization' => $this->getBasicAuthorization(),
+                'Content-Type' => $this->authContentType,
+            ];
+    
+            $body = [
+                'grant_type' => 'client_credentials',
+            ];
+    
+            $httpResponse = $this->httpClient->request(
+                'POST',
+                $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint),
+                $headers,
+                $body
+            );
+    
+            $responseBody = $httpResponse->getBody()->getContents();
+    
+            var_dump($responseBody);
+    
+            $item->expiresAfter($responseBody['expires_in']);
+        
+            return $responseBody['access_token'];
+        });
 
         return 'Bearer ' . $value;
-    }
-
-    private function getBearerToken(ItemInterface $item)
-    {
-        $headers = [
-            'Authorization' => $this->getBasicAuthorization(),
-            'Content-Type' => $this->authContentType,
-        ];
-
-        $body = [
-            'grant_type' => 'client_credentials',
-        ];
-
-        $httpResponse = $this->httpClient->request(
-            'POST',
-            $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint),
-            $headers,
-            $body
-        );
-
-        $responseBody = $httpResponse->getBody()->getContents();
-
-        $item->expiresAfter($responseBody['expires_in']);
-    
-        return $responseBody['access_token'];
     }
 
     private function getBasicAuthorization()
