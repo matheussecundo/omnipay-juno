@@ -43,6 +43,26 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('clientSecret', $value);
     }
 
+    public function getTestClientId()
+    {
+        return $this->getParameter('testClientId');
+    }
+
+    public function setTestClientId($value)
+    {
+        return $this->setParameter('testClientId', $value);
+    }
+
+    public function getTestClientSecret()
+    {
+        return $this->getParameter('testClientSecret');
+    }
+
+    public function setTestClientSecret($value)
+    {
+        return $this->setParameter('testClientSecret', $value);
+    }
+
     public function getJunoVersion()
     {
         return $this->getParameter('junoVersion');
@@ -91,6 +111,23 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->authTestBaseUrl;
     }
 
+    private function getBasicAuthorization()
+    {
+        $clientId = NULL;
+        $clientSecret = NULL;
+        if ($this->getTestMode() === FALSE)
+        {
+            $clientId = $this->getClientId();
+            $clientSecret = $this->getClientSecret();
+        }
+        else
+        {
+            $clientId = $this->getTestClientId();
+            $clientSecret = $this->getTestClientSecret();
+        }
+        return 'Basic ' . base64_encode($clientId . ':' . $clientSecret);
+    }
+
     private function getAuthorization()
     {
         $cache = new FilesystemAdapter();
@@ -126,11 +163,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         });
 
         return 'Bearer ' . $junoBearerToken;
-    }
-
-    private function getBasicAuthorization()
-    {
-        return 'Basic ' . base64_encode($this->getClientId() . ':' . $this->getClientSecret());
     }
 
     abstract public function getHttpMethod();

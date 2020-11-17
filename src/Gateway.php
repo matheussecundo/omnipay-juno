@@ -35,6 +35,26 @@ class Gateway extends AbstractGateway
         return $this->setParameter('clientSecret', $value);
     }
 
+    public function getTestClientId()
+    {
+        return $this->getParameter('testClientId');
+    }
+
+    public function setTestClientId($value)
+    {
+        return $this->setParameter('testClientId', $value);
+    }
+
+    public function getTestClientSecret()
+    {
+        return $this->getParameter('testClientSecret');
+    }
+
+    public function setTestClientSecret($value)
+    {
+        return $this->setParameter('testClientSecret', $value);
+    }
+
     public function getJunoVersion()
     {
         return $this->getParameter('junoVersion');
