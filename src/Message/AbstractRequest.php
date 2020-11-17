@@ -90,7 +90,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $cache = new FilesystemAdapter();
 
-        $value = $cache->get('junoBearerToken', function (ItemInterface $item) {
+        $junoBearerToken = $cache->get('junoBearerToken', function (ItemInterface $item) {
             $headers = [
                 'Authorization' => $this->getBasicAuthorization(),
                 'Content-Type' => $this->authContentType,
@@ -116,7 +116,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             return $responseBody['access_token'];
         });
 
-        return 'Bearer ' . $value;
+        return 'Bearer ' . $junoBearerToken;
     }
 
     private function getBasicAuthorization()
