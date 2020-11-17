@@ -20,9 +20,6 @@
 		"symfony/cache": "^5"
     },
 	"autoload": {
-        "psr-4": { "Omnipay\\Juno\\" : "src/" },
-        "classmap": [
-            "src/"
-        ]
+        "psr-4": { "Omnipay\\Juno\\" : "src/" }
     }
 }
