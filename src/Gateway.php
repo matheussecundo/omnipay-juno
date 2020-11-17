@@ -3,7 +3,7 @@
 namespace Omnipay\Juno;
 
 use Omnipay\Common\AbstractGateway;
-use Message;
+use Omnipay\Juno\Message;
 
 /**
  * Gateway Class
