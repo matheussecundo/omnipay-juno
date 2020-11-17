@@ -28,16 +28,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return 'application/json;charset=UTF-8';
     }
 
-    public function getTestMode()
-    {
-        return $this->getParameter('testMode');
-    }
-
-    public function setTestMode($value)
-    {
-        return $this->setParameter('testMode', $value);
-    }
-
     public function getClientId()
     {
         return $this->getParameter('clientId');
