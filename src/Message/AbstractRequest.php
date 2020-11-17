@@ -113,19 +113,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     private function getBasicAuthorization()
     {
-        $clientId = NULL;
-        $clientSecret = NULL;
-        if ($this->getTestMode() === FALSE)
+        if ($this->getTestMode())
         {
-            $clientId = $this->getClientId();
-            $clientSecret = $this->getClientSecret();
+            return 'Basic ' . base64_encode($this->getTestClientId() . ':' . $this->getTestClientSecret());
         }
-        else
-        {
-            $clientId = $this->getTestClientId();
-            $clientSecret = $this->getTestClientSecret();
-        }
-        return 'Basic ' . base64_encode($clientId . ':' . $clientSecret);
+        return 'Basic ' . base64_encode($this->getClientId() . ':' . $this->getClientSecret());
     }
 
     private function getAuthorization()
