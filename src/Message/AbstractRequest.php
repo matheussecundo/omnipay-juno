@@ -144,8 +144,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             );
     
             $responseBody = $httpResponse->getBody()->getContents();
-    
-            var_dump($url, $headers, $body, $this->getClientId(), $this->getClientSecret(), $responseBody);
 
             $data = json_decode($responseBody, true);
     
