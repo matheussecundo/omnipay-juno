@@ -6,20 +6,22 @@
 
 namespace Omnipay\Juno\Message;
 
+require_once __DIR__.'/../../../vendor/autoload.php';
+
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\ItemInterface;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
+    protected $liveBaseUrl = 'https://api.juno.com.br';
+    protected $testBaseUrl = 'https://sandbox.boletobancario.com/api-integration';
 
-    public function getLiveRootUrl()
-    {
-        return 'https://api.juno.com.br';
-    }
-
-    public function getTestRootUrl()
-    {
-        return 'https://sandbox.boletobancario.com/api-integration';
-    }
+    protected $authLiveBaseUrl = 'https://api.juno.com.br/authorization-server';
+    protected $authTestBaseUrl = 'https://sandbox.boletobancario.com/authorization-server';
+    protected $authContentType = 'application/x-www-form-urlencoded';
+    protected $authEndpoint = 'oauth/token';
+    
 
     public function getContentType()
     {
@@ -76,33 +78,56 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('resourceToken', $value);
     }
 
-    public function getBearerAuthorization()
-    {
-        return $this->getParameter('bearer');
-    }
-
-    public function setBearerAuthorization($value)
-    {
-        return $this->setParameter('bearer', $value);
-    }
-
-    public function getRootUrl()
+    public function getBaseUrl()
     {
         if ($this->getTestMode() == FALSE)
         {
-            return $this->getLiveRootUrl();
+            return $this->liveBaseUrl;
         }
-        return $this->getTestRootUrl();
+        return $this->testBaseUrl;
     }
 
-    public function getAuthorization()
+    private function getAuthBaseUrl()
     {
-        $bearer = $this->getBearerAuthorization();
-        if ($bearer !== NULL)
+        if ($this->getTestMode() == FALSE)
         {
-            return $bearer;
+            return $this->authLiveBaseUrl;
         }
-        return $this->getBasicAuthorization();
+        return $this->authTestBaseUrl;
+    }
+
+    private function getAuthorization()
+    {
+        $cache = new FilesystemAdapter();
+
+        $value = $cache->get('junoBearerToken', $this->getBearerToken);
+
+        return 'Bearer ' . $value;
+    }
+
+    private function getBearerToken(ItemInterface $item)
+    {
+        $headers = [
+            'Authorization' => $this->getBasicAuthorization(),
+            'Content-Type' => $this->authContentType,
+        ];
+
+        $body = [
+            'grant_type' => 'client_credentials',
+        ];
+
+        $httpResponse = $this->httpClient->request(
+            'POST',
+            $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint),
+            $headers,
+            $body
+        );
+
+        $responseBody = $httpResponse->getBody()->getContents();
+
+        $item->expiresAfter($responseBody['expires_in']);
+    
+        return $responseBody['access_token'];
     }
 
     private function getBasicAuthorization()
@@ -147,7 +172,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
-            $this->getAbsoluteURL($this->getRootUrl(), $this->getEndpoint()),
+            $this->getAbsoluteURL($this->getBaseUrl(), $this->getEndpoint()),
             $headers,
             $body
         );

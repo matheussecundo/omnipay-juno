@@ -17,12 +17,12 @@ class Gateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return AuthorizeRequest
+     * @return ListBanksRequest
      */
     public function authorize(array $parameters = array())
     {
         return $this->createRequest(
-            Message\AuthorizeRequest::class,
+            Message\ListBanksRequest::class,
             $parameters
         );
     }
