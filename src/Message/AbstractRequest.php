@@ -96,15 +96,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                 'Content-Type' => $this->authContentType,
             ];
     
-            $body = [
-                'grant_type' => 'client_credentials',
-            ];
+            $data = ['grant_type' => 'client_credentials'];
+            $body = http_build_query($data, '', '&');
     
             $httpResponse = $this->httpClient->request(
                 'POST',
                 $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint),
                 $headers,
-                $body
+                $body,
             );
     
             $responseBody = $httpResponse->getBody()->getContents();
@@ -157,7 +156,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             array('Content-Type' => $this->getContentType()),
         );
 
-        $body = $data ? http_build_query($data, '', '&') : null;
+        $body = $data ? json_encode($data) : null;
 
         $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
