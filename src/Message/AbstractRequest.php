@@ -96,6 +96,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $cache = new FilesystemAdapter();
 
         $junoBearerToken = $cache->get('junoBearerToken', function (ItemInterface $item) {
+            $url = $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint);
+
             $headers = [
                 'Authorization' => $this->getBasicAuthorization(),
                 'Content-Type' => $this->authContentType,
@@ -107,14 +109,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     
             $httpResponse = $this->httpClient->request(
                 'POST',
-                $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint),
+                $url,
                 $headers,
                 $body,
             );
     
             $responseBody = $httpResponse->getBody()->getContents();
     
-            var_dump($responseBody);
+            var_dump($url, $responseBody);
     
             $item->expiresAfter($responseBody['expires_in']);
         
