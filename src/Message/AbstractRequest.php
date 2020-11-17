@@ -20,13 +20,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     protected $authLiveBaseUrl = 'https://api.juno.com.br/authorization-server';
     protected $authTestBaseUrl = 'https://sandbox.boletobancario.com/authorization-server';
     protected $authContentType = 'application/x-www-form-urlencoded';
+    protected $authAccept = 'application/json;charset=UTF-8';
     protected $authEndpoint = 'oauth/token';
-    
-
-    public function getContentType()
-    {
-        return 'application/json;charset=UTF-8';
-    }
 
     public function getClientId()
     {
@@ -68,6 +63,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('resourceToken', $value);
     }
 
+    public function getContentType()
+    {
+        return 'application/json;charset=UTF-8';
+    }
+
+    public function getAccept()
+    {
+        return 'application/json;charset=UTF-8';
+    }
+
     public function getBaseUrl()
     {
         if ($this->getTestMode() == FALSE)
@@ -94,6 +99,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             $headers = [
                 'Authorization' => $this->getBasicAuthorization(),
                 'Content-Type' => $this->authContentType,
+                'Accept' => $this->authAccept,
             ];
     
             $data = ['grant_type' => 'client_credentials'];
@@ -154,6 +160,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             $this->getHeaders(),
             array('Authorization' => $this->getAuthorization()),
             array('Content-Type' => $this->getContentType()),
+            array('Accept' => $this->getAccept()),
         );
 
         $body = $data ? json_encode($data) : null;
