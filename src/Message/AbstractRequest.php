@@ -96,7 +96,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $cache = new FilesystemAdapter();
 
         $junoBearerToken = $cache->get('junoBearerToken', function (ItemInterface $item) {
-            $url = $this->getAbsoluteURL($this->getAuthBaseUrl(), $this->authEndpoint);
+            $url = urlMerge($this->getAuthBaseUrl(), $this->authEndpoint);
 
             $headers = [
                 'Authorization' => $this->getBasicAuthorization(),
@@ -117,10 +117,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             $responseBody = $httpResponse->getBody()->getContents();
     
             var_dump($url, $responseBody);
+
+            $data = json_decode($responseBody, true);
     
-            $item->expiresAfter($responseBody['expires_in']);
+            $item->expiresAfter($data['expires_in']);
         
-            return $responseBody['access_token'];
+            return $data['access_token'];
         });
 
         return 'Bearer ' . $junoBearerToken;
@@ -169,7 +171,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
-            $this->getAbsoluteURL($this->getBaseUrl(), $this->getEndpoint()),
+            urlMerge($this->getBaseUrl(), $this->getEndpoint()),
             $headers,
             $body
         );
@@ -180,11 +182,5 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     protected function createResponse($data, $headers = [])
     {
         return $this->response = new Response($this, $data, $headers);
-    }
-
-    private function getAbsoluteURL($root, $endpoint)
-    {
-        $url_parts = parse_url($endpoint);
-        return http_build_url($root, $url_parts, HTTP_URL_JOIN_PATH);
     }
 }

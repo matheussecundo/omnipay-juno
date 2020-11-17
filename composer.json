@@ -17,8 +17,7 @@
     ],
     "require": {
         "omnipay/common": "^3",
-        "symfony/cache": "^5",
-        "jakeasmith/http_build_url": "^1"
+        "symfony/cache": "^5"
     },
 	"autoload": {
         "psr-4": { "Omnipay\\Juno\\" : "src/" }
