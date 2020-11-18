@@ -75,19 +75,24 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getResourceToken()
     {
-        if ($this->getTestMode() == FALSE)
+        if ($this->getTestMode())
         {
-            return $this->getParameter('resourceToken');
+            return $this->getParameter('testResourceToken');
         }
-        return $this->getParameter('testResourceToken');
+        return $this->getParameter('resourceToken');
     }
 
     public function setResourceToken($value)
     {
-        if ($this->getTestMode() == FALSE)
+        if ($this->getTestMode())
         {
-            return $this->setParameter('resourceToken', $value);
+            return $this->setParameter('testResourceToken', $value);
         }
+        return $this->setParameter('resourceToken', $value);
+    }
+
+    public function setTestResourceToken($value)
+    {
         return $this->setParameter('testResourceToken', $value);
     }
 
@@ -103,20 +108,20 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getBaseUrl()
     {
-        if ($this->getTestMode() == FALSE)
+        if ($this->getTestMode())
         {
-            return $this->liveBaseUrl;
+            return $this->testBaseUrl;
         }
-        return $this->testBaseUrl;
+        return $this->liveBaseUrl;
     }
 
     private function getAuthBaseUrl()
     {
-        if ($this->getTestMode() == FALSE)
+        if ($this->getTestMode())
         {
-            return $this->authLiveBaseUrl;
+            return $this->authTestBaseUrl;
         }
-        return $this->authTestBaseUrl;
+        return $this->authLiveBaseUrl;
     }
 
     private function getBasicAuthorization()
