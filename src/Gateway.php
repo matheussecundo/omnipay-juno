@@ -75,6 +75,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('resourceToken', $value);
     }
 
+    public function getTestResourceToken()
+    {
+        return $this->getParameter('testResourceToken');
+    }
+
+    public function setTestResourceToken($value)
+    {
+        return $this->setParameter('testResourceToken', $value);
+    }
+
     /**
      * @param array $parameters
      * @return CreateDigitalAccountRequest
