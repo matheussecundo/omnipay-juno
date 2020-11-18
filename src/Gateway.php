@@ -77,6 +77,30 @@ class Gateway extends AbstractGateway
 
     /**
      * @param array $parameters
+     * @return CreateDigitalAccountRequest
+     */
+    public function createDigitalAccount(array $parameters = array())
+    {
+        return $this->createRequest(
+            Message\CreateDigitalAccountRequest::class,
+            $parameters
+        );
+    }
+
+    /**
+     * @param array $parameters
+     * @return FindDigitalAccountRequest
+     */
+    public function findDigitalAccount(array $parameters = array())
+    {
+        return $this->createRequest(
+            Message\FindDigitalAccountRequest::class,
+            $parameters
+        );
+    }
+
+    /**
+     * @param array $parameters
      * @return GetBanksRequest
      */
     public function getBanks(array $parameters = array())
