@@ -80,10 +80,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function setResourceToken($value)
     {
-        if ($this->getTestMode())
-        {
-            return $this->setParameter('testResourceToken', $value);
-        }
         return $this->setParameter('resourceToken', $value);
     }
 
@@ -187,8 +183,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         if ($this->getResourceToken()) {
             $headers['X-Resource-Token'] = $this->getResourceToken();
         }
-
-        var_dump($headers);
 
         return $headers;
     }
