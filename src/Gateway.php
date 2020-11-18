@@ -77,12 +77,36 @@ class Gateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return ListBanksRequest
+     * @return GetBanksRequest
      */
     public function getBanks(array $parameters = array())
     {
         return $this->createRequest(
-            Message\ListBanksRequest::class,
+            Message\GetBanksRequest::class,
+            $parameters
+        );
+    }
+
+    /**
+     * @param array $parameters
+     * @return GetCompanyTypesRequest
+     */
+    public function getCompanyTypes(array $parameters = array())
+    {
+        return $this->createRequest(
+            Message\GetCompanyTypesRequest::class,
+            $parameters
+        );
+    }
+
+    /**
+     * @param array $parameters
+     * @return GetBusinessAreasRequest
+     */
+    public function getBusinessAreas(array $parameters = array())
+    {
+        return $this->createRequest(
+            Message\GetBusinessAreasRequest::class,
             $parameters
         );
     }

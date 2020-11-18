@@ -4,7 +4,7 @@ namespace Omnipay\Juno\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 
-class ListBanksRequest extends AbstractRequest
+class FindDigitalAccountRequest extends AbstractRequest
 {
 
     public function getHttpMethod()
@@ -14,15 +14,13 @@ class ListBanksRequest extends AbstractRequest
 
     public function getEndpoint()
     {
-        return 'data/banks';
+        return 'digital-accounts';
     }
 
     public function getData()
     {
-        $data = [
-            
-        ];
+        $this->validate('resourceToken');
 
-        return $data;
+        return [];
     }
 }
