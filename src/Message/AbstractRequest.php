@@ -75,12 +75,20 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getResourceToken()
     {
-        return $this->getParameter('resourceToken');
+        if ($this->getTestMode() == FALSE)
+        {
+            return $this->getParameter('resourceToken');
+        }
+        return $this->getParameter('testResourceToken');
     }
 
     public function setResourceToken($value)
     {
-        return $this->setParameter('resourceToken', $value);
+        if ($this->getTestMode() == FALSE)
+        {
+            return $this->setParameter('resourceToken', $value);
+        }
+        return $this->setParameter('testResourceToken', $value);
     }
 
     public function getContentType()
@@ -173,6 +181,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         if ($this->getResourceToken()) {
             $headers['X-Resource-Token'] = $this->getResourceToken();
         }
+
+        var_dump($headers);
 
         return $headers;
     }
