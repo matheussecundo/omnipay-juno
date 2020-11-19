@@ -3,6 +3,8 @@
 namespace Omnipay\Juno\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Juno\Address;
+use Omnipay\Juno\BankAccount;
 
 class CreateDigitalAccountRequest extends AbstractRequest
 {
@@ -52,9 +54,11 @@ class CreateDigitalAccountRequest extends AbstractRequest
             $data['legalRepresentative'] = $this->getLegalRepresentative();
         }
 
-        $data['address'] = $this->getAddress();
+        $address = $this->getAddress() instanceof Address ? $this->getAddress() : new Address($this->getAddress());
+        $data['address'] = $address->getParameters();
 
-        $data['bankAccount'] = $this->getBankAccount();
+        $bankAccount = $this->getBankAccount() instanceof BankAccount ? $this->getBankAccount() : new BankAccount($this->getBankAccount());
+        $data['bankAccount'] = $bankAccount->getParameters();
 
         if ($this->getEmailOptOut())
         {
