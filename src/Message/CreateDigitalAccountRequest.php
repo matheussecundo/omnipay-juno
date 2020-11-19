@@ -55,9 +55,11 @@ class CreateDigitalAccountRequest extends AbstractRequest
         }
 
         $address = $this->getAddress() instanceof Address ? $this->getAddress() : new Address($this->getAddress());
+        $address->validate();
         $data['address'] = $address->getParameters();
 
         $bankAccount = $this->getBankAccount() instanceof BankAccount ? $this->getBankAccount() : new BankAccount($this->getBankAccount());
+        $bankAccount->validate();
         $data['bankAccount'] = $bankAccount->getParameters();
 
         if ($this->getEmailOptOut())
