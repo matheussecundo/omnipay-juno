@@ -17,11 +17,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     protected $liveBaseUrl = 'https://api.juno.com.br';
     protected $testBaseUrl = 'https://sandbox.boletobancario.com/api-integration';
 
-    protected $authLiveBaseUrl = 'https://api.juno.com.br/authorization-server';
-    protected $authTestBaseUrl = 'https://sandbox.boletobancario.com/authorization-server';
+    protected $authLiveEndpoint = 'https://api.juno.com.br/authorization-server/oauth/token';
+    protected $authTestEndpoint = 'https://sandbox.boletobancario.com/authorization-server/oauth/token';
     protected $authContentType = 'application/x-www-form-urlencoded';
     protected $authAccept = 'application/json;charset=UTF-8';
-    protected $authEndpoint = 'oauth/token';
 
     public function getClientId()
     {
@@ -41,26 +40,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setClientSecret($value)
     {
         return $this->setParameter('clientSecret', $value);
-    }
-
-    public function getTestClientId()
-    {
-        return $this->getParameter('testClientId');
-    }
-
-    public function setTestClientId($value)
-    {
-        return $this->setParameter('testClientId', $value);
-    }
-
-    public function getTestClientSecret()
-    {
-        return $this->getParameter('testClientSecret');
-    }
-
-    public function setTestClientSecret($value)
-    {
-        return $this->setParameter('testClientSecret', $value);
     }
 
     public function getJunoVersion()
@@ -83,16 +62,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('resourceToken', $value);
     }
 
-    public function getTestResourceToken()
-    {
-        return $this->getParameter('testResourceToken');
-    }
-
-    public function setTestResourceToken($value)
-    {
-        return $this->setParameter('testResourceToken', $value);
-    }
-
     public function getContentType()
     {
         return 'application/json;charset=UTF-8';
@@ -112,21 +81,17 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->liveBaseUrl;
     }
 
-    private function getAuthBaseUrl()
+    private function getAuthEndpoint()
     {
         if ($this->getTestMode())
         {
-            return $this->authTestBaseUrl;
+            return $this->authTestEndpoint;
         }
-        return $this->authLiveBaseUrl;
+        return $this->authLiveEndpoint;
     }
 
     private function getBasicAuthorization()
     {
-        if ($this->getTestMode())
-        {
-            return 'Basic ' . base64_encode($this->getTestClientId() . ':' . $this->getTestClientSecret());
-        }
         return 'Basic ' . base64_encode($this->getClientId() . ':' . $this->getClientSecret());
     }
 
@@ -135,7 +100,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $cache = new FilesystemAdapter();
 
         $junoBearerToken = $cache->get('junoBearerToken', function (ItemInterface $item) {
-            $url = $this->getAuthBaseUrl() . '/' . $this->authEndpoint;
+            $url = $this->getAuthEndpoint();
 
             $headers = [
                 'Authorization' => $this->getBasicAuthorization(),
