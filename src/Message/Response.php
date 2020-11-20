@@ -23,6 +23,16 @@ class Response extends AbstractResponse
         return !isset($this->data['error']);
     }
 
+    public function getCode()
+    {
+        return isset($this->data['error']) ? $this->data['status'] : NULL;
+    }
+
+    public function getMessage()
+    {
+        return isset($this->data['error']) ? $this->data['error'] : NULL;
+    }
+
     public function getResourceToken()
     {
         return isset($this->data['resourceToken']) ? $this->data['resourceToken'] : NULL;
