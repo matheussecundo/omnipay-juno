@@ -20,7 +20,7 @@ class Response extends AbstractResponse
 
     public function isSuccessful()
     {
-        return isset($this->data['success']) && $this->data['success'];
+        return !isset($this->data['error']);
     }
 
     public function getResourceToken()
