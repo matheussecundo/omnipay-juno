@@ -66,7 +66,7 @@ class Address
 
     public function setNumber($value)
     {
-        return $this->getParameter('number', $value ? $value : 'N/A');
+        return $this->setParameter('number', $value ? $value : 'N/A');
     }
 
     public function getComplement()
@@ -76,7 +76,7 @@ class Address
 
     public function setComplement($value)
     {
-        return $this->getParameter('complement', $value);
+        return $this->setParameter('complement', $value);
     }
 
     public function getNeighborhood()
