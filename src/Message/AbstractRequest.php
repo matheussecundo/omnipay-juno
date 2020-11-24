@@ -99,11 +99,13 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $cache = new FilesystemAdapter();
 
-        $junoBearerToken = $cache->get('junoBearerToken', function (ItemInterface $item) {
+        $basicAuthorization = $this->getBasicAuthorization();
+
+        $junoBearerToken = $cache->get($basicAuthorization, function (ItemInterface $item) use ($basicAuthorization) {
             $url = $this->getAuthEndpoint();
 
             $headers = [
-                'Authorization' => $this->getBasicAuthorization(),
+                'Authorization' => $basicAuthorization,
                 'Content-Type' => $this->authContentType,
                 'Accept' => $this->authAccept,
             ];
