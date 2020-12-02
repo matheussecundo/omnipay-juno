@@ -30,7 +30,9 @@ class Response extends AbstractResponse
 
     public function getMessage()
     {
-        return isset($this->data['error']) ? $this->data['error'] : NULL;
+        $errorMessage = isset($this->data['error']) ? $this->data['error'] : NULL;
+        if (!$errorMessage) return NULL;
+        return $errorMessage . ' -> ' . json_encode($this->data['details']);
     }
 
     public function getResourceToken()
